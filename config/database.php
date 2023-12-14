@@ -2,6 +2,18 @@
 
 use Illuminate\Support\Str;
 
+// Parse JAWSDB_URL if it exists
+if (getenv("JAWSDB_URL") !== false) {
+    $url = parse_url(getenv("JAWSDB_URL"));
+
+    putenv('DB_HOST=' . $url['host']);
+    putenv('DB_PORT=' . $url['port']);
+    putenv('DB_DATABASE=' . substr($url['path'], 1));
+    putenv('DB_USERNAME=' . $url['user']);
+    putenv('DB_PASSWORD=' . $url['pass']);
+}
+
+
 return [
 
     /*
@@ -125,7 +137,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
